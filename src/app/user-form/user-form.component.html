@@ -1,0 +1,28 @@
+<div>
+  <div class="user-details-form">
+    <div>
+      <form #userForm="ngForm" (ngSubmit)="submitUser()">
+        <div>
+          <label>Name</label>
+          <input name="name" [(ngModel)]="userModel.name" />
+        </div>
+        <div>
+          <label>Age</label>
+          <input name="age" [(ngModel)]="userModel.age" />
+        </div>
+        <div>
+          <label>Course</label>
+          <input name="course" [(ngModel)]="userModel.course" />
+          <button type="submit">Add User</button>
+        </div>
+      </form>
+    </div>
+    <small>User Count: {{ userList.length }}</small>
+  </div>
+  <br />
+  <br />
+  <button (click)="showUserDetails()">Show User Details</button>
+  <pre *ngIf="userList.length">
+    {{ userList | json }}
+  </pre>
+</div>
