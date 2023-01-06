@@ -1,28 +1,103 @@
-<div>
-  <div class="user-details-form">
-    <div>
-      <form #userForm="ngForm" (ngSubmit)="submitUser()">
-        <div>
-          <label>Name</label>
-          <input name="name" [(ngModel)]="userModel.name" />
-        </div>
-        <div>
-          <label>Age</label>
-          <input name="age" [(ngModel)]="userModel.age" />
-        </div>
-        <div>
-          <label>Course</label>
-          <input name="course" [(ngModel)]="userModel.course" />
-          <button type="submit">Add User</button>
-        </div>
-      </form>
+<div class="container-fluid">
+  <form #userForm="ngForm" (ngSubmit)="submitUser(userForm)">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input
+        #name="ngModel"
+        type="text"
+        class="form-control"
+        name="name"
+        [(ngModel)]="userModel.name"
+        [class.is-invalid]="name.invalid && name.touched"
+        required
+      />
+      <!-- This is one way of showing error message in generic -->
+      <small class="text-danger" [class.d-none]="name.valid || name.untouched"
+        >Name is required or Invalid!</small
+      >
     </div>
-    <small>User Count: {{ userList.length }}</small>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input
+        #email="ngModel"
+        type="email"
+        class="form-control"
+        name="email"
+        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+        [class.is-invalid]="email.invalid && email.touched"
+        [(ngModel)]="userModel.email"
+        required
+      />
+      <div *ngIf="email.errors && email.invalid && email.touched">
+        <small class="text-danger" *ngIf="email.errors?.['required']"
+          >Email is required.</small
+        >
+        <small class="text-danger" *ngIf="email.errors?.['pattern']"
+          >Email must match the pattern.</small
+        >
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="age" class="form-label">age</label>
+      <input
+        #age="ngModel"
+        type="number"
+        class="form-control"
+        name="age"
+        (blur)="isValidAge(age.value)"
+        (change)="isValidAge(age.value)"
+        [class.is-invalid]="ageHasError && age.touched"
+        [(ngModel)]="userModel.age"
+        required
+      />
+      <small class="text-danger" [class.d-none]="!ageHasError || age.untouched"
+        >Valid age should be between 20 to 55.</small
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="course" class="form-label">Select Course</label>
+      <select
+        #course="ngModel"
+        name="course"
+        class="form-select"
+        (blur)="isValidCourse(course.value)"
+        (change)="isValidCourse(course.value)"
+        [class.is-invalid]="courseHasError && course.touched"
+        [(ngModel)]="userModel.course"
+      >
+        <option selected value="default">I am interested in</option>
+        <option value="{{ course }}" *ngFor="let course of courses">
+          {{ course }}
+        </option>
+      </select>
+      <small
+        class="text-danger"
+        [class.d-none]="!courseHasError || course.untouched"
+        >Course should be selected.</small
+      >
+    </div>
+
+    <button
+      [disabled]="userForm.form.invalid || courseHasError || ageHasError"
+      class="btn btn-primary"
+      type="submit"
+    >
+      Submit User
+    </button>
+  </form>
+
+  <small>User Count: {{ userListItem.length }}</small>
+
+  <div *ngIf="userListItem.length">
+    <h4>Preview</h4>
+    <div class="user-details-preview">
+      <div class="user-table">
+        <div class="row-header"></div>
+        <div class="row-body"></div>
+      </div>
+    </div>
   </div>
-  <br />
-  <br />
-  <button (click)="showUserDetails()">Show User Details</button>
-  <pre *ngIf="userList.length">
-    {{ userList | json }}
-  </pre>
 </div>

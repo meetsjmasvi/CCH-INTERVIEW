@@ -1,23 +1,28 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { userList } from '../user';
 
 @Component({
   selector: 'app-user-details',
   template: `
     <div>
       <h3>Display user details in Table</h3>
-      <!-- Todo -->
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Course</th>
-        </tr>
-        <tr *ngFor="let user of userList">
-          <td>{{ user.name }}</td>
-          <td>{{ user.age }}</td>
-          <td>{{ user.course }}</td>
-        </tr>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Email</th>
+            <th scope="col">Course</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of userList">
+            <th scope="row">{{ user.name }}</th>
+            <td>{{ user.age }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.course }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   `,
@@ -25,12 +30,9 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class UserDetailsComponent {
   public userList = [];
-  constructor(private route: ActivatedRoute) {}
+  constructor() {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((param: ParamMap) => {
-      const data = param.get('data');
-      this.userList = JSON.parse(data);
-    });
+    this.userList = userList;
   }
 }
